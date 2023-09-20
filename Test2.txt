@@ -1,0 +1,169 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+import java.util.Scanner;
+
+public class ToyStore implements Comparable<ToyStore> {
+    private String id;
+    private String name;
+    private int dropFrequency;
+
+    public ToyStore(String id, String name, int dropFrequency) {
+        this.id = id;
+        this.name = name;
+        this.dropFrequency = dropFrequency;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getDropFrequency() {
+        return dropFrequency;
+    }
+
+    public void setDropFrequency(int dropFrequency) {
+        this.dropFrequency = dropFrequency;
+    }
+
+    public static void main(String[] args) {
+        // Initialize the priority queue
+        PriorityQueue<ToyStore> queue = new PriorityQueue<>();
+
+        // Add toys to the queue
+        queue.add(new ToyStore("1", "Игрушечный робот", 2));
+        queue.add(new ToyStore("2", "Кукла", 6));
+        // Add more toys as needed
+
+        // Process user commands
+        boolean exit = false;
+        try (Scanner scanner = new Scanner(System.in)) {
+            while (!exit) {
+                // Display user menu
+                System.out.println("Меню Пользователя:\n1) Добавить новую игрушку\n2) Установить частоту выпадения\n3) Удалить игрушку\n4) Просмотр списка игрушек\n5) Играть\n6) Выход");
+
+                // Get user command
+                int command = scanner.nextInt();
+
+                // Perform actions based on user command
+                switch (command) {
+                    case 1:
+                        // Add new toy
+                        System.out.print("Введите ID игрушки: ");
+                        String toyId = scanner.next();
+
+                        System.out.print("Введите название игрушки: ");
+                        String toyName = scanner.next();
+
+                        System.out.print("Введите частоту падения игрушки: ");
+                        int toyDropFrequency = scanner.nextInt();
+
+                        queue.add(new ToyStore(toyId, toyName, toyDropFrequency));
+                        System.out.println("Игрушка успешно добавлена.");
+                        break;
+                    case 2:
+                        // Set drop weight
+                        System.out.print("Введите ID игрушки: ");
+                        String toyIdToUpdate = scanner.next();
+
+                        boolean toyFound = false;
+                        for (ToyStore toy : queue) {
+                            if (toy.getId().equals(toyIdToUpdate)) {
+                                toyFound = true;
+
+                                System.out.print("Введите новую частоту падения игрушки: ");
+                                int newDropFrequency = scanner.nextInt();
+
+                                toy.setDropFrequency(newDropFrequency);
+
+                                System.out.println("Частота падения игрушки успешно обновлена.");
+                                break;
+                            }
+                        }
+
+                        if (!toyFound) {
+                            System.out.println("Игрушка с указанным ID не найдена.");
+                        }
+                        break;
+                    case 3:
+                        // Remove toy
+                        System.out.println("Введите ID игрушки, которую нужно удалить: ");
+                        String removeToyId = scanner.next();
+
+                        boolean removed = false;
+                        Iterator<ToyStore> iterator = queue.iterator();
+                        while (iterator.hasNext()) {
+                            ToyStore toy = iterator.next();
+                            if (toy.getId().equals(removeToyId)) {
+                                iterator.remove();
+                                System.out.println("Игрушка успешно удалена.");
+                                removed = true;
+                                break;
+                            }
+                        }
+
+                        if (!removed) {
+                            System.out.println("Игрушка с указанным ID не найдена.");
+                        }
+                        break;
+                    case 4:
+                        // View toy list
+                        System.out.println("Список игрушек:");
+                        for (ToyStore toy : queue) {
+                            System.out.println(toy);
+                        }
+                        break;
+                    case 5:
+                        // Play
+                        System.out.println("Игра...");
+                        // Write 10 random toy IDs to a file
+                        try (FileWriter writer = new FileWriter("result.txt")) {
+                            for (int i = 0; i < 10; i++) {
+                                ToyStore randomToy = getRandomToy(queue);
+                                writer.write(randomToy.getId() + "\n");
+                            }
+                            System.out.println("Результаты записаны в файл.");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case 6:
+                        // Exit
+                        exit = true;
+                        break;
+                    default:
+                        System.out.println("Некорректная команда. Пожалуйста, попробуйте еще раз.");
+                        break;
+                }
+            }
+        }
+        System.out.println("Программа Игрушечного Магазина завершена.");
+    }
+
+    private static ToyStore getRandomToy(PriorityQueue<ToyStore> queue) {
+        int randIndex = (int) (Math.random() * queue.size());
+        int currentIndex = 0;
+        for (ToyStore toy : queue) {
+            if (currentIndex == randIndex) {
+                return toy;
+            }
+            currentIndex++;
+        }
+        return null;
+    }
+
+    @Override
+    public int compareTo(ToyStore otherToy) {
+        return Integer.compare(this.dropFrequency, otherToy.dropFrequency);
+    }
+
+    @Override
+    public String toString() {
+        return "Игрушка: [ID=" + id + ", Название=" + name + ", Частота Падения=" + dropFrequency + "]";
+    }
+}
