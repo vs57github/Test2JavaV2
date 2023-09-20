@@ -165,6 +165,6 @@ public class ToyStore implements Comparable<ToyStore> {
 
     @Override
     public String toString() {
-        return "Игрушка: [ID=" + id + ", Название=" + name + ", Частота Падения=" + dropFrequency + "]";
+        return "Игрушка: [ID=" + id + ", Название=" + name + ", Частота Выпадения=" + dropFrequency + "]";
     }
 }
