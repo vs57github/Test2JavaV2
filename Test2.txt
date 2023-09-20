@@ -38,6 +38,7 @@ public class ToyStore implements Comparable<ToyStore> {
         // Add toys to the queue
         queue.add(new ToyStore("1", "Игрушечный робот", 2));
         queue.add(new ToyStore("2", "Кукла", 6));
+        queue.add(new ToyStore("3", "Конструктор", 2));
         // Add more toys as needed
 
         // Process user commands
@@ -60,7 +61,7 @@ public class ToyStore implements Comparable<ToyStore> {
                         System.out.print("Введите название игрушки: ");
                         String toyName = scanner.next();
 
-                        System.out.print("Введите частоту падения игрушки: ");
+                        System.out.print("Введите частоту выпадения игрушки: ");
                         int toyDropFrequency = scanner.nextInt();
 
                         queue.add(new ToyStore(toyId, toyName, toyDropFrequency));
@@ -76,12 +77,12 @@ public class ToyStore implements Comparable<ToyStore> {
                             if (toy.getId().equals(toyIdToUpdate)) {
                                 toyFound = true;
 
-                                System.out.print("Введите новую частоту падения игрушки: ");
+                                System.out.print("Введите новую частоту выпадения игрушки: ");
                                 int newDropFrequency = scanner.nextInt();
 
                                 toy.setDropFrequency(newDropFrequency);
 
-                                System.out.println("Частота падения игрушки успешно обновлена.");
+                                System.out.println("Частота выпадения игрушки успешно обновлена.");
                                 break;
                             }
                         }
